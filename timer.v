@@ -1,6 +1,6 @@
 module timer 
 (
-  // Declarar os pinos de IO
+  input 
 );
 
 endmodule
