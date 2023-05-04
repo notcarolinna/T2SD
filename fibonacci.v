@@ -1,6 +1,6 @@
 module fibonacci 
 (
-  input rst, //reset do módulo que é ativo alto (‘1’)
+  input rst, // reset do módulo que é ativo alto (‘1’)
   input clk, // clock
   input f_en, //enable do módulo que indica quando produzir o dado de saída
   
