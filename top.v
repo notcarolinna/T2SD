@@ -1,4 +1,5 @@
 module top 
+#(parameter HALF_MS_COUNT = 500)
 (
   input rst, // reset do módulo que é ativo alto (‘1’)
   input clk, //clock de referência deste módulo síncrono que opera a 100 MHz
@@ -12,5 +13,8 @@ module top
   output [7:0]an, //controla a ativação de cada um dos displays disponíveis no FPGA
   output [7:0]dec_ddp //valor decodificado do dígito de 8 bits a ser mostrado no instante atual pelo display
 );
+  
+ 
+      
 
 endmodule
