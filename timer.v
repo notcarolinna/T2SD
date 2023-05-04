@@ -12,6 +12,7 @@ module timer
   //SINAIS
   reg clk_10; 
   reg [31:0] cont_50K;
+  reg t_valid_ed;
   
   wire t_en_ed;
   
@@ -34,18 +35,26 @@ module timer
       end
     end
   end
+    
+  // processo de verificação se entrada é valida ou n
+  always @(posedge clk or posedge rst)
+    begin
+      if(t_en_ed == 1)begin
+        t_valid_ed <= 1'b1;
+      end
+      else begin
+        t_valid_ed <= 1'b0;
+      end
+    end
   
-  
-  assign t_valid = (t_en_ed == 1) ? 1'b1 :  // tem q ser binário ou pode ser decimal ou direto 0 ou 1?
-                   1'b0;
-  
+  // SERÁ Q EU POSSO COLOCAR A SOMA AI EM CIMA JUNTO? TERIA Q VER COM O SOR
+ 
+  // processo para calcular a saída
   always @(posedge clk or posedge rst)
     begin
       if(t_valid == 1'b1)begin
         t_out <= t_out + 1;  // se eu to recebendo coisas validas, a cada cilco de clock a saida recebe o valor q ela tinha mais 1, ou seja, soma de 1 em 1
       end
-    end
-    
-  
+  end 
   
 endmodule
