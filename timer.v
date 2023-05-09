@@ -13,9 +13,10 @@ module timer
   //SINAIS
   reg clk_10; 
   reg [31:0] cont_50K;
-  reg t_valid_ed;
+  reg t_valid_r;
+reg [15:0] t_out_r;
   
-  wire t_en_ed;
+  wire t_en_r;
   
    // CLOCK DE 10Hz
   // ESSE era DE 1KHz com o parêmetro em 50000, para ir de 1khz para 10hz dividimos por 100, já que 0,01 kHz	= 10 Hz
@@ -39,14 +40,15 @@ module timer
   // processo de verificação se entrada é valida ou n
   always @(posedge clk or posedge rst)
     begin
-      if(t_en_ed == 1)begin
-        t_valid_ed <= 1'b1;
-	t_out <= t_out + 1;  // se eu to recebendo coisas validas , a cada cilco de clock a saida recebe o valor q ela tinha mais 1, ou seja, soma de 1 em 1
+      if(t_en_r == 1)begin
+        t_valid_r <= 1'b1;
+	t_out_r <= t_out_r + 1;  // se eu to recebendo coisas validas , a cada cilco de clock a saida recebe o valor q ela tinha mais 1, ou seja, soma de 1 em 1
       end
       else begin
-        t_valid_ed <= 1'b0;
+        t_valid_r <= 1'b0;
       end
     end
   
+assign t_out = t_out_r;
     
 endmodule
