@@ -9,5 +9,7 @@ module dcm
   output clk_2, //clock lento gerado, que pode operar entre 10Hz e 78.125 mHz;
   output [2:0]prog_out //ndica qual frequência o clock lento está gerando naquele momento
 );
+  
+  //clock de 100 mHz
 
 endmodule
