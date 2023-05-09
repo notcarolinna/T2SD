@@ -1,4 +1,5 @@
 module timer 
+#(parameter HALF_MS_CONT = 50000000)
 (
   input rst, //reset do módulo que é ativo alto (‘1’)
   input clk, //clock rápido de 10 Hz;
@@ -14,24 +15,23 @@ module timer
   reg [31:0] cont_50K;
   reg t_valid_ed;
   
-  wire t_en;
+  wire t_en_ed;
   
-  
-  // CLOCK DE 10Hz
+   // CLOCK DE 10Hz
   // ESSE era DE 1KHz com o parêmetro em 50000, para ir de 1khz para 10hz dividimos por 100, já que 0,01 kHz	= 10 Hz
   always @(posedge clk or posedge rst)
   begin
-    if (reset == 1'b1) begin
+    if (rst == 1'b1) begin
       clk_10   <= 1'b0; 
-      count_50K <= 32'd0;
+      cont_50K <= 32'd0;
     end
     else begin
-      if (count_50K == HALF_MS_COUNT-1) begin
+      if (cont_50K == HALF_MS_CONT-1) begin
         clk_10   <= ~clk_10;
-        count_50K <= 32'd0;
+        cont_50K <= 32'd0;
       end
       else begin
-        count_50K <= count_50K + 1;
+        cont_50K <= cont_50K + 1;
       end
     end
   end
@@ -39,15 +39,14 @@ module timer
   // processo de verificação se entrada é valida ou n
   always @(posedge clk or posedge rst)
     begin
-      if(t_en == 1)begin
+      if(t_en_ed == 1)begin
         t_valid_ed <= 1'b1;
-        t_out <= t_out + 1;  // se eu to recebendo coisas validas, a cada cilco de clock a saida recebe o valor q ela tinha mais 
+	t_out <= t_out + 1;  // se eu to recebendo coisas validas , a cada cilco de clock a saida recebe o valor q ela tinha mais 1, ou seja, soma de 1 em 1
       end
       else begin
         t_valid_ed <= 1'b0;
       end
     end
   
-
-  
+    
 endmodule
