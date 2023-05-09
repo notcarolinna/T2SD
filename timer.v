@@ -22,12 +22,12 @@ module timer
   always @(posedge clk or posedge rst)
   begin
     if (reset == 1'b1) begin
-      ck_1KHz   <= 1'b0;  // trocar o ck_1KHz por clk_10
+      clk_10   <= 1'b0; 
       count_50K <= 32'd0;
     end
     else begin
       if (count_50K == HALF_MS_COUNT-1) begin
-        ck_1KHz   <= ~ck_1KHz;
+        clk_10   <= ~clk_10;
         count_50K <= 32'd0;
       end
       else begin
