@@ -17,7 +17,7 @@ module timer
   wire t_en_ed;
   
   //edge dectector para o sinal de enable
-  edge_detector t_valid_ed (
+  edge_detector t_valid_ed ( .clock(clk), .reset(rst), .din(t_en), .rising(t_en_ed));
   
   // CLOCK DE 10Hz
   // ESSE era DE 1KHz com o parêmetro em 50000, para ir de 1khz para 10hz dividimos por 100, já que 0,01 kHz	= 10 Hz
