@@ -14,10 +14,8 @@ module timer
   reg [31:0] cont_50K;
   reg t_valid_ed;
   
-  wire t_en_ed;
+  wire t_en;
   
-  //edge dectector para o sinal de enable
-  edge_detector t_valid_ed ( .clock(clk), .reset(rst), .din(t_en), .rising(t_en_ed));
   
   // CLOCK DE 10Hz
   // ESSE era DE 1KHz com o parêmetro em 50000, para ir de 1khz para 10hz dividimos por 100, já que 0,01 kHz	= 10 Hz
@@ -41,22 +39,15 @@ module timer
   // processo de verificação se entrada é valida ou n
   always @(posedge clk or posedge rst)
     begin
-      if(t_en_ed == 1)begin
+      if(t_en == 1)begin
         t_valid_ed <= 1'b1;
+        t_out <= t_out + 1;  // se eu to recebendo coisas validas, a cada cilco de clock a saida recebe o valor q ela tinha mais 
       end
       else begin
         t_valid_ed <= 1'b0;
       end
     end
   
-  // SERÁ Q EU POSSO COLOCAR A SOMA AI EM CIMA JUNTO? TERIA Q VER COM O SOR
- 
-  // processo para calcular a saída
-  always @(posedge clk or posedge rst)
-    begin
-      if(t_valid == 1'b1)begin
-        t_out <= t_out + 1;  // se eu to recebendo coisas validas, a cada cilco de clock a saida recebe o valor q ela tinha mais 1, ou seja, soma de 1 em 1
-      end
-  end 
+
   
 endmodule
