@@ -39,5 +39,16 @@ module fibonacci
       end
     end
   end
+  
+   // processo de verificação se entrada é valida ou n
+  always @(posedge clk or posedge rst)
+    begin
+      if(f_en_ed == 1)begin
+        f_valid_ed <= 1'b1;
+      end
+      else begin
+        f_valid_ed <= 1'b0;
+      end
+    end
 
 endmodule
