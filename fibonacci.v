@@ -16,6 +16,11 @@ module fibonacci
   wire f_en_ed;
   
   
+  //edge dectector para o sinal de enable
+  edge_detector f_valid_ed ( .clock(clk), .reset(rst), .din(f_en), .rising(f_en_ed));
+  
+  
+  
   // CLOCK DE 10Hz
   // ESSE era DE 1KHz com o parêmetro em 50000, para ir de 1khz para 10hz dividimos por 100, já que 0,01 kHz	= 10 Hz
   always @(posedge clk or posedge rst)
