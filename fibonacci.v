@@ -12,6 +12,7 @@ module fibonacci
   reg clk_10; 
   reg [31:0] cont_50K;
   reg f_valid;
+  reg [15:0] t1, t2, prox;
   
   wire f_en;
   
@@ -36,26 +37,30 @@ module fibonacci
     end
   end
   
-   // processo de verificação se entrada é valida ou n
+   // processo de verificação se entrada é valida ou n e calcula fibonacci
   always @(posedge clk or posedge rst)
     begin
-      if(f_en_ed == 1)begin
-        f_valid_ed <= 1'b1;
+      if(f_en == 1)begin
+        f_valid <= 1'b1;
+        // aqui soma
+        prox <= t1 + t2;
+        t1 <= t2;
+        t2 <= prox;
+        
       end
       else begin
-        f_valid_ed <= 1'b0;
+        f_valid <= 1'b0;
       end
     end
   
-   // SERÁ Q EU POSSO COLOCAR A SOMA AI EM CIMA JUNTO? TERIA Q VER COM O SOR
- 
-  // processo para calcular a saída
-  always @(posedge clk or posedge rst)
-    begin
-      if(f_valid == 1'b1)begin
-        f_out <= f_out + 1;  // pros primeiros dois numeros isso funciona , no caso 0 e 1
+  //onde coloca isso?  
+  if(rst == 1)begin
+        t1 <= 16'd0;
+        t2 <= 16'd1;
+        prox <= 16'd0;// inicializado em zero pra n pegar lixinho
       end
-  end 
+   
+ 
   
 
 endmodule
