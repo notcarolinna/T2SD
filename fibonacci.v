@@ -50,5 +50,16 @@ module fibonacci
         f_valid_ed <= 1'b0;
       end
     end
+  
+   // SERÁ Q EU POSSO COLOCAR A SOMA AI EM CIMA JUNTO? TERIA Q VER COM O SOR
+ 
+  // processo para calcular a saída
+  always @(posedge clk or posedge rst)
+    begin
+      if(f_valid == 1'b1)begin
+        f_out <= f_out + 1;  // pros primeiros dois numeros isso funciona , no caso 0 e 1
+      end
+  end 
+  
 
 endmodule
