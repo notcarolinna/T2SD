@@ -40,27 +40,24 @@ module fibonacci
    // processo de verificação se entrada é valida ou n e calcula fibonacci
   always @(posedge clk or posedge rst)
     begin
-      if(f_en == 1)begin
+      if(rst == 1)begin
+        t1 <= 16'd0;
+        t2 <= 16'd1;
+      end
+      else begin
+        if(f_en == 1)begin
         f_valid <= 1'b1;
         // aqui soma
         prox <= t1 + t2;
         t1 <= t2;
         t2 <= prox;
-        
+        end
       end
       else begin
         f_valid <= 1'b0;
       end
     end
   
-  //onde coloca isso?  
-  if(rst == 1)begin
-        t1 <= 16'd0;
-        t2 <= 16'd1;
-        prox <= 16'd0;// inicializado em zero pra n pegar lixinho
-      end
-   
- 
   
 
 endmodule
