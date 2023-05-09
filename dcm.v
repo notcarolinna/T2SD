@@ -11,5 +11,7 @@ module dcm
 );
   
   //clock de 100 mHz
+  //10 Hertz [Hz] =   0.000 01 Megahertz [MHz]
+  //100 Megahertz [MHz] =   100 000 000 Hertz [Hz]
 
 endmodule
