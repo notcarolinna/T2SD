@@ -13,5 +13,8 @@ module dcm
   //clock de 100 mHz
   //10 Hertz [Hz] =   0.000 01 Megahertz [MHz]
   //100 Megahertz [MHz] =   100 000 000 Hertz [Hz]
+  // 1 KHZ divide the frequency value by 1000 para MHz = 0.001
+  // 100 MHz == 100000 KHz
+
 
 endmodule
