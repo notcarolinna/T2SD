@@ -1,5 +1,6 @@
 module dcm 
  #(parameter HALF_MS_CONT = 50000000)
+ #(parameter HALF_COUNT = 500000)
 (
   input rst, //reset do módulo que é ativo alto (‘1’);
   input clk, // clock de referência deste módulo síncrono que opera a 100 MHz
@@ -13,36 +14,33 @@ module dcm
   
   //SINAIS:
   reg clk_1;
+  reg clk_100;
   reg [31:0]count_50K;
+  reg [31:0]count_100mh;
   reg [2:0]prog_reg; // sinal do prog_out
   
   wire update_w;
-
-  //EU PRECISO FAZER ESSE TIMER AQUI?????????????
-  //clock de 100 mHz
-  //10 Hertz [Hz] =   0.000 01 Megahertz [MHz]
-  //100 Megahertz [MHz] =   100 000 000 Hertz [Hz]
+ 
   // 1 KHZ divide the frequency value by 1000 para MHz = 0.001
   // 100 MHz == 100000 KHz
   // se eu fizer dividido por 1000 e dps multiplicar por 100 vai dar certo?
-  
-   //#(parameter HALF_MS_COUNT = 500000)
-  /*always @(posedge clk or posedge rst)
+  //clock de 100 mHz
+  always @(posedge clk or posedge rst)
   begin
     if (rst == 1'b1) begin
       clk_100   <= 1'b0;
-      count_50K <= 32'd0;
+      count_100mh <= 32'd0;
     end
     else begin
-      if (count_50K == HALF_MS_COUNT-1) begin
+      if (count_100mh == HALF_COUNT-1) begin
         clk_100   <= ~ck_1KHz;
-        count_50K <= 32'd0;
+        count_100mh <= 32'd0;
       end
       else begin
-        count_50K <= count_50K + 1;
+        count_100mh <= count_100mh + 1;
       end
     end
-  end*/
+  end
   
   //clock de 10hz para o clk_1
   always @(posedge clk or posedge rst)
