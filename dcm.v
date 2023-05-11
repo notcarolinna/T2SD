@@ -47,7 +47,22 @@ module dcm
   end*/
   
   //clock de 10hz para o clk_1
-  
+  always @(posedge clk or posedge rst)
+  begin
+    if (rst == 1'b1) begin
+      clk_10   <= 1'b0; 
+      cont_50K <= 32'd0;
+    end
+    else begin
+      if (cont_50K == HALF_MS_CONT-1) begin
+        clk_10   <= ~clk_10;
+        cont_50K <= 32'd0;
+      end
+      else begin
+        cont_50K <= cont_50K + 1;
+      end
+    end
+  end
   
   
   always @(posedge clk or posedge rst)
