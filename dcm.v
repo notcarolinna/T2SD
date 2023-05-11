@@ -61,6 +61,9 @@ module dcm
   end
   
  
+ //instanciação do edge detector para o wire do update
+ 
+ 
  
  assign clk_2 = (update_w == 1 && prog_reg == 2'd0) ? /* 1 clk_1*/;
                 (update_w == 1 && prog_reg == 2'd1) ? /* 2 clk_1*/;
