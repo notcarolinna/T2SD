@@ -1,5 +1,5 @@
 module dcm 
-  #(parameter HALF_MS_COUNT = 5000)
+  #(parameter HALF_MS_COUNT = 500000)
 (
   input rst, //reset do módulo que é ativo alto (‘1’);
   input clk, // clock de referência deste módulo síncrono que opera a 100 MHz
@@ -13,7 +13,11 @@ module dcm
   
   //SINAIS:
   reg clk_100;
-  reg [31:0] count_50K;
+  reg [31:0]count_50K;
+  reg [2:0]prog; // sinal do prog_in
+  reg [2:0]prog_reg; // sinal do prog_out
+  
+  wire update_w;
 
   
   //clock de 100 mHz
@@ -38,6 +42,15 @@ module dcm
       end
     end
   end
+  
+  
+  always @(posedge clk or posedge rst)
+    begin
+      // tem q ver a situação do reset ainda
+      if(update_w == 1)begin
+        
+      end
+  
 
   
   
