@@ -1,5 +1,5 @@
 module dcm 
- 
+ #(parameter HALF_MS_CONT = 50000000)
 (
   input rst, //reset do módulo que é ativo alto (‘1’);
   input clk, // clock de referência deste módulo síncrono que opera a 100 MHz
@@ -12,10 +12,8 @@ module dcm
 );
   
   //SINAIS:
-  reg clk_100;
+  reg clk_1;
   reg [31:0]count_50K;
-  reg [2:0]prog; // sinal do prog_in
-  reg [1:0]mode;
   reg [2:0]prog_reg; // sinal do prog_out
   
   wire update_w;
@@ -50,12 +48,12 @@ module dcm
   always @(posedge clk or posedge rst)
   begin
     if (rst == 1'b1) begin
-      clk_10   <= 1'b0; 
+      clk_1   <= 1'b0; 
       cont_50K <= 32'd0;
     end
     else begin
       if (cont_50K == HALF_MS_CONT-1) begin
-        clk_10   <= ~clk_10;
+        clk_1   <= ~clk_1;
         cont_50K <= 32'd0;
       end
       else begin
@@ -64,20 +62,27 @@ module dcm
     end
   end
   
-  
+ 
+ 
+ assign clk_2 = (update_w == 1 && prog_reg == 2'd0) ? /* 1 clk_1*/;
+                (update_w == 1 && prog_reg == 2'd1) ? /* 2 clk_1*/;
+                (update_w == 1 && prog_reg == 2'd2) ? /* 4 clk_1*/;
+                (update_w == 1 && prog_reg == 2'd3) ? /* 8 clk_1*/;
+                (update_w == 1 && prog_reg == 2'd4) ? /* 16 clk_1*/;
+                (update_w == 1 && prog_reg == 2'd5) ? /* 32 clk_1*/;
+                (update_w == 1 && prog_reg == 2'd6) ? /* 64 clk_1*/;
+                (update_w == 1 && prog_reg == 2'd7) ? /* 128 clk_1*/;
+ 
   always @(posedge clk or posedge rst)
     begin
       // tem q ver a situação do reset ainda
       if(rst == 1)begin
-        mode <= 2'd0;
+        prog_reg <= 2'd0;
       end
       else begin
         if(update_w == 1)begin
-          // aqui tem q fazer o mode somar um
-          case(mode)
-            2'd0: begin
-              prog_reg <= 
-            end
+          // pegar o valor q o usuário colocaou no prog_in
+          prog_reg <= prog_in;
         end
       end
   
