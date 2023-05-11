@@ -93,7 +93,7 @@ module dcm
      
      
      
-     ///falta conferir o 2.3  o 2.4    2.5    o 3  e testar as waves de cada um
+     ///falta conferir o 2.3( terminar o edge detector e colocar os valores dos segundos o 2.4    2.5    o 3  e testar as waves de cada um
        
   
   
