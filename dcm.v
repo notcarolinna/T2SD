@@ -86,10 +86,14 @@ module dcm
         end
       end
   
-
-  
-  
-  
+  // preciso de um registrador prog pra poder zerar ele dps de passar pro prog_reg
+     
+     
+     
+     
+     
+     ///falta conferir o 2.3  o 2.4    2.5    o 3  e testar as waves de cada um
+       
   
   
 
