@@ -43,6 +43,8 @@ module dcm
     end
   end
   
+  //clock de 10hz para o clk_1
+  
   
   always @(posedge clk or posedge rst)
     begin
