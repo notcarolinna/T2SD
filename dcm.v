@@ -2,14 +2,14 @@ module dcm
  #(parameter HALF_MS_CONT = 50000000)
  #(parameter HALF_COUNT = 500000)
 (
-  input rst, //reset do módulo que é ativo alto (‘1’);
+  input rst, // reset do módulo que é ativo alto (‘1’);
   input clk, // clock de referência deste módulo síncrono que opera a 100 MHz
-  input update, //indica que o clock lento deve ser atualizado para a frequência indicada pelo sinal prog_in
-  input [2:0]prog_in,//indica qual frequência o clock lento deve operar 
+  input update, // indica que o clock lento deve ser atualizado para a frequência indicada pelo sinal prog_in
+  input [2:0]prog_in,// indica qual frequência o clock lento deve operar 
   
-  output clk_1, //clock rápido gerado, que opera a 10 Hz
-  output clk_2, //clock lento gerado, que pode operar entre 10Hz e 78.125 mHz;
-  output [2:0]prog_out //ndica qual frequência o clock lento está gerando naquele momento
+  output clk_1, // clock rápido gerado, que opera a 10 Hz
+  output clk_2, // clock lento gerado, que pode operar entre 10Hz e 78.125 mHz;
+  output [2:0]prog_out // indica qual frequência o clock lento está gerando naquele momento
 );
   
   //SINAIS:
@@ -19,11 +19,8 @@ module dcm
   reg [31:0]count_100mh;
   reg [2:0]prog_reg; // sinal do prog_out
   
-  wire update_w;
- 
-  // 1 KHZ divide the frequency value by 1000 para MHz = 0.001
-  // 100 MHz == 100000 KHz
-  // se eu fizer dividido por 1000 e dps multiplicar por 100 vai dar certo?
+  wire update_w; // realmente precisa desse wire? 
+
   //clock de 100 mHz
   always @(posedge clk or posedge rst)
   begin
@@ -62,21 +59,20 @@ module dcm
   
  
  //instanciação do edge detector para o wire do update
- edge_detector update_w (
+ edge_detector update_w ()
  
  
- assign clk_2 = (update_w == 1 && prog_reg == 2'd0) ? /* 1 clk_1*/;
-                (update_w == 1 && prog_reg == 2'd1) ? /* 2 clk_1*/;
-                (update_w == 1 && prog_reg == 2'd2) ? /* 4 clk_1*/;
-                (update_w == 1 && prog_reg == 2'd3) ? /* 8 clk_1*/;
-                (update_w == 1 && prog_reg == 2'd4) ? /* 16 clk_1*/;
-                (update_w == 1 && prog_reg == 2'd5) ? /* 32 clk_1*/;
-                (update_w == 1 && prog_reg == 2'd6) ? /* 64 clk_1*/;
-                (update_w == 1 && prog_reg == 2'd7) ? /* 128 clk_1*/;
+ assign clk_2 = (update_w == 1 && prog_reg == 2'd0) ? 3'b000; // Modo 0
+                (update_w == 1 && prog_reg == 2'd1) ? 3'b001; // Modo 1
+                (update_w == 1 && prog_reg == 2'd2) ? 3'b010; // Modo 2
+                (update_w == 1 && prog_reg == 2'd3) ? 3'b011; // Modo 3
+                (update_w == 1 && prog_reg == 2'd4) ? 3'b100; // Modo 4
+                (update_w == 1 && prog_reg == 2'd5) ? 3'b101; // Modo 5
+                (update_w == 1 && prog_reg == 2'd6) ? 3'b110; // Modo 6
+                (update_w == 1 && prog_reg == 2'd7) ? 3'b111; // Modo 7
  
   always @(posedge clk or posedge rst)
     begin
-      // tem q ver a situação do reset ainda
       if(rst == 1)begin
         prog_reg <= 2'd0;
       end
@@ -86,17 +82,12 @@ module dcm
           prog_reg <= prog_in;
         end
       end
+    end
   
-  // preciso de um registrador prog pra poder zerar ele dps de passar pro prog_reg
-     
-     
-     
-     
-     
-     ///falta conferir o 2.3( terminar o edge detector e colocar os valores dos segundos o 2.4    2.5    o 3  e testar as waves de cada um
+  // preciso de um registrador prog pra poder zerar ele dps de passar pro prog_reg          
+  // falta conferir o 2.3 (terminar o edge detector e colocar os valores dos segundos o 2.4 2.5 o 3  e testar as waves de cada um)
        
   
-  
-
+ 
 
 endmodule
