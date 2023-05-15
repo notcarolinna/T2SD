@@ -143,7 +143,7 @@ module top
       end    
    end
           
-   //comando para os led's
+   //comando para os led's, eles indicam qual o estado em q a maquina de estados se encontra
    assign led[0] = (EA == 6'd0) ? 1'b1 : 
           led[1] = (EA == 6'd1) ? 1'b1 :
           led[2] = (EA == 6'd2) ? 1'b1 :
