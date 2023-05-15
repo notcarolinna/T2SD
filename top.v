@@ -14,7 +14,74 @@ module top
   output [7:0]dec_ddp //valor decodificado do dígito de 8 bits a ser mostrado no instante atual pelo display
 );
   
+  
+  // FAZ A LIGAÇÃO DE TODOS OS MÓDULOS COM O FPGA
+  
+  // sinais
+  wire start_f_ed;
+  wire start_t_ed; 
+  wire stop_f_t_ed;
+  wire update_ed;
+  
+  reg[1:0]EA;
+  
+  
+  
+  // precisa filtrar os sinais do start, stop, update
+  
+  
+  // máquina de estados:
+  // 1: S_IDLE, estado inicial em repouso
+  // 2: S_COMM_F, estado de produção e consumo dos dados do módulo Fibonacci
+  // 3: S_WAIT_F, estado onde a produção de dados do módulo Fibonacci é parada temporariamente pois o buffer está cheio
+  // 4: S_COMM_T, estado de produção e consumo dos dados do módulo Timer
+  // 5: S_WAIT_T, estado onde a produção de dados do módulo Timer é parada temporariamente pois o buffer está cheio
+  // 6: S_BUF_EMPTY, estado de consumo e esvaziamento do buffer
+  
+  
+  always @(posedge clk or posedge rst)
+    begin
+      if(rst == 1)begin
+        EA <= 2'd1; // estado inicial
+      end
+      else begin
+        case (EA)
+          2'd1: // estado inicial
+            begin
+              if(start_f_ed == 1)begin
+                EA <= 2'd2; // prod fibonacci
+              end
+              else begin
+                if(start_t_ed == 1)begin
+                  EA <= 2'd4; //prod timer
+                end
+              end
+         
+         2'd2:
+              begin
+                if(stop_f_t_ed == 1)begin
+                  EA <= 2'd6; // esvaziamento e consumo do buffer
+                end
+                else begin
+                  if( buffer_full == 1) begin // tem q ver como tu indica isso no wrapper e como isso vem pra ca
+                    EA <= 2'd3; //prod fibonacci para, buffer cheio
+                  end                  
+                end                
+              end
+           
+          2'd3:
+              begin
+                if( not buffer_full ) begin  // tem q ver como tu indica isso no wrapper e como isso vem pra ca
+                  EA <= 2'd2; //prod fibonacci
+                end 
+                else begin
+                  if( stop_f_t_ed == 1)begin
+                    EA <= 2'd2; // prod fibonacci
+                  end
+                end
+              end       
+          end
+      end    
+   end
  
-      
-
 endmodule
