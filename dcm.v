@@ -59,7 +59,7 @@ module dcm
   
  
  //instanciação do edge detector para o wire do update
- edge_detector update_w (.clock(clk), .reset(rst), .din(), rising());
+ edge_detector update_w (.clock(clk), .reset(rst), .din(update), rising(update_w));
  
  
  assign clk_2 = (update_w == 1 && prog_reg == 2'd0) ? 3'b000; // Modo 0
@@ -81,34 +81,12 @@ module dcm
       else begin
         if(update_w == 1)begin // Pressionou o update e agora a magia vira potência de 2
 
-        3'b001: // Modo 1
-        begin 
-          if(count_50K == (HALF_COUNT*2)-1)
-            begin
-              clk_1 <= ~clk_1;
-              count_50K <= 32'd1;
-            end
-            else begin
-              count_50K <= count_50K + 32'd1;
-            end
-          end
-
-        3'b010: // Modo 2
-        begin
-          if(count_50K == (HALF_COUNT*4))
-             begin
-              clk_1 <= ~clk_1;
-              count_50K <= 32'd1;
-            end
-            else begin
-                count_50K <= count_50K + 32'd1;
-            end
-          end
+          // eu preciso disso aqui? acho q n pq ele ja to todo ali no assing?
         end
       end
     end
   
-  // preciso de um registrador prog pra poder zerar ele dps de passar pro prog_reg          
+  // preciso de um registrador prog pra poder zerar ele dps de passar pro prog_reg?          
   // falta conferir o 2.3 (terminar o edge detector e colocar os valores dos segundos o 2.4 2.5 o 3  e testar as waves de cada um)
 
 endmodule
