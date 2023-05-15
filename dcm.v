@@ -59,7 +59,7 @@ module dcm
   
  
  //instanciação do edge detector para o wire do update
- edge_detector update_w ()
+ edge_detector update_w (.clock(clk), .reset(rst), .din(), rising());
  
  
  assign clk_2 = (update_w == 1 && prog_reg == 2'd0) ? 3'b000; // Modo 0
