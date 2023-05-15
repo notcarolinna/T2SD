@@ -28,7 +28,10 @@ module top
   
   
   // precisa filtrar os sinais do start, stop, update
-  
+  edge_detector start_f (.clock(clk), .reset(rst), .din(start_f), .rising(start_f_ed));
+  edge_detector start_t (.clock(clk), .reset(rst), .din(start_t), .rising(start_t_ed));
+  edge_detector start_f_t (.clock(clk), .reset(rst), .din(start_f_t), .rising(start_f_t_ed));
+  edge_detector update (.clock(clk), .reset(rst), .din(update), .rising(update_ed));
   
   // máquina de estados:
   // 1: S_IDLE, estado inicial em repouso
