@@ -153,5 +153,17 @@ module top
           1'b0;
           
    //'instanciar'/ 'colocar as devidas infos nos devidos lugares' do timer, fibonacci, dm e wrapper
+          
+          
+          
+   //'chamar' os arquivos     
+  fibonacci fibonacci_arq(.reset(reset), .clock(clk_1), .f_en(f_en), .f_valid(f_valid), .f_out(f_out));
+  timer timer_arq(.reset(reset), .clock(clk_1), .t_en(t_en), .t_valid(t_valid), .t_out(t_out));
+  dcm dcm_arq(.reset(reset), .clock(clock), .clk_1(clk_1), .clk_2(clk_2), .update(update_ed), .prog_in(prog), .prog_out(prog_out));
+  dm dm_arq(.reset(reset), .clock(clock), .prog(prog_out), .data_2(data_2), .dec_ddp(dec_ddp), .an(an), .moduledm(module_wire));
+  wrapper wrapper_arq(.reset(reset), .clk_1(clk_1), .clk_2(clk_2), .data_1_en(data_1_en), .data_1(data_1), .buffer_empty(buffer_empty), .buffer_full(buffer_full), .data_2_valid(data_2_valid), .data_2(data_2));
+ 
+   
+   
  
 endmodule
