@@ -22,17 +22,15 @@ module dm
  wire [3:0] dez_min;
  wire [3:0] cen_min;
  wire [3:0] mil_min;
- wire [2:0] prog_w; // é um wire pq o valor n precisa ser armazenado ele vai passar direto pro diplay
  
 // funcionamento dos displays
 assign uni_min = data_2[3:0];
 assign dez_min = data_2[7:4];
 assign cen_min = data_2[11:8];
 assign mil_min = data_2[15:12];
- assign prog_w = (prog == 3'd1) ? // de onde vem o clack lento?
 
-dspl_drv_NexysA7 display(.clk(clk), .rst(rst), .an(an), .dec_cat(dec_ddp), .d1({1'b1, uni_min[3:0], 1'b0}), .d2({1'b1, dez_min[3:0], 1'b0}), .d3({1'b1, cen_min[3:0], 1'b0}), .d4({1'b1, mil_min[3:0], 1'b0}), .d5(6'b0), .d6({3'b1, modulo[1:0],1'b0}), .d7(6'b0), .d8({2'b1, prog[2:0], 1'b0}));
-// fiz a mesma coisa que no timer.v do t1
+dspl_drv_NexysA7 display(.clk(clk), .rst(rst), .an(an), .dec_cat(dec_ddp), .d1({1'b1, uni_min[3:0], 1'b0}), .d2({1'b1, dez_min[3:0], 1'b0}), .d3({1'b1, cen_min[3:0], 1'b0}), .d4({1'b1, mil_min[3:0], 1'b0}), .d5(6'b0), .d6({3'b1, modulo[1:0],1'b0}), .d7(6'b0), .d8({1'b1, prog[2:0], 1'b0}));
+//mesma coisa que no timer do microondas
 
 endmodule
 
