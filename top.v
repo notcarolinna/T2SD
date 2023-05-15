@@ -153,8 +153,20 @@ module top
           1'b0;
           
    //'instanciar'/ 'colocar as devidas infos nos devidos lugares' do timer, fibonacci, dm e wrapper
-          
-          
+   //timer
+   assign t_en = (EA == 6'd3 && buffer_full != 1'b1) ? 1'b1 : 1'b0; // pra saber qnd produzir o dado do timer
+   //fibonacci
+   assign f_en = (EA == 6'd1 && buffer_full != 1'b1) ? 1'b1 : 1'b0;  // pra saber qnd produzir o dado do fibonacci     
+   //dm
+   assign modulo_w = (EA == 6'd1 || EA == 6'd2) ? 2'd1 :  // HELPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+                     (EA == 6'd3 || EA == 6'd4) ? 2'd2 : 
+                     2'd0;
+   //wrapper
+   assign data_1 = (EA == 6'd1) ? f_out : 
+                   (EA == 6'd3) ? t_out : 
+                   16'd0;
+   assign data_1_en = f_en || t_en;  /// ISSo pode????
+              
           
    //'chamar' os arquivos     
   fibonacci fibonacci_arq(.rst(rst), .clk(clk_1), .f_en(f_en), .f_valid(f_valid), .f_out(f_out));
