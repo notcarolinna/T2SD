@@ -159,7 +159,7 @@ module top
    //'chamar' os arquivos     
   fibonacci fibonacci_arq(.rst(rst), .clk(clk_1), .f_en(f_en), .f_valid(f_valid), .f_out(f_out));
   timer timer_arq(.rst(rst), .clk(clk_1), .t_en(t_en), .t_valid(t_valid), .t_out(t_out));
-  dcm dcm_arq(.rst(rst), .clk(clock), .clk_1(clk_1), .clk_2(clk_2), .update(update_ed), .prog_in(prog), .prog_out(prog_out));
+  dcm dcm_arq(.rst(rst), .clk(clock), .clk_1(clk_1), .clk_2(clk_2), .update(update_ed), .prog_in(prog), .prog_out(prog_out)); /// tem q ver o nosso dcm ainda pq acho q os sinais n batem todos com esses
   dm dm_arq(.rst(rst), .clk(clk), .prog(prog_out), .data_2(data_2), .dec_ddp(dec_ddp), .an(an), .modulo(modulo_w));
   wrapper wrapper_arq(.rst(rst), .clk_1(clk_1), .clk_2(clk_2), .data_1_en(data_1_en), .data_1(data_1), .buffer_empty(buffer_empty), .buffer_full(buffer_full), .data_2_valid(data_2_valid), .data_2(data_2));
  
