@@ -17,15 +17,35 @@ module top
   
   // FAZ A LIGAÇÃO DE TODOS OS MÓDULOS COM O FPGA
   
-  // sinais
-  wire start_f_ed;
-  wire start_t_ed; 
-  wire stop_f_t_ed;
-  wire update_ed;
+  // SINAIS
+    //sinais do top mesmo
+    wire start_f_ed;
+    wire start_t_ed; 
+    wire stop_f_t_ed;
+    wire update_ed;
+    reg[5:0]EA; // 6 bits pq são 6 valores
   
-  reg[1:0]EA;
+    //sinais q 'vem' do wrapper
   
   
+    //sinais q 'vem' do dm
+    
+  
+    //sinais q 'vem' do dcm
+    wire clk_1;
+    wire clk_2;
+    wire [2:0]prog_out;
+  
+    //sinais q 'vem' do fibonacci
+    wire f_en;
+    wire f_valid; 
+    wire [15:0]f_out;
+    
+    //sinais q 'vem' do timer
+     wire t_en;
+     wire t_valid;
+     wire [15:0]t_out;
+       
   
   // precisa filtrar os sinais do start, stop, update
   edge_detector start_f (.clock(clk), .reset(rst), .din(start_f), .rising(start_f_ed));
@@ -45,73 +65,73 @@ module top
   always @(posedge clk or posedge rst)
     begin
       if(rst == 1)begin
-        EA <= 2'd1; // estado inicial
+        EA <= 6'd1; // estado inicial
       end
       else begin
         case (EA)
-          2'd1: // estado inicial
+          6'd1: // estado inicial
             begin
               if(start_f_ed == 1)begin
-                EA <= 2'd2; // prod fibonacci
+                EA <= 6'd2; // prod fibonacci
               end
               else begin
                 if(start_t_ed == 1)begin
-                  EA <= 2'd4; //prod timer
+                  EA <= 6'd4; //prod timer
                 end
               end
          
-         2'd2:
+         2'62:
               begin
                 if(stop_f_t_ed == 1)begin
-                  EA <= 2'd6; // esvaziamento e consumo do buffer
+                  EA <= 6'd6; // esvaziamento e consumo do buffer
                 end
                 else begin
                   if( buffer_full == 1) begin // tem q ver como tu indica isso no wrapper e como isso vem pra ca
-                    EA <= 2'd3; //prod fibonacci para temporariamente, buffer cheio
+                    EA <= 6'd3; //prod fibonacci para temporariamente, buffer cheio
                   end                  
                 end                
               end
            
-          2'd3:
+          6'd3:
               begin
                 if( not buffer_full ) begin  // tem q ver como tu indica isso no wrapper e como isso vem pra ca
-                  EA <= 2'd2; //prod fibonacci
+                  EA <= 6'd2; //prod fibonacci
                 end 
                 else begin
                   if( stop_f_t_ed == 1)begin
-                    EA <= 2'd2; // prod fibonacci
+                    EA <= 6'd2; // prod fibonacci
                   end
                 end
               end  
             
-           2'd4:
+           2'64:
               begin
                 if(stop_f_t_ed == 1)begin
-                  EA <= 2'd6; //esvaziamento e consumo do buffer
+                  EA <= 6'd6; //esvaziamento e consumo do buffer
                 end
                 else begin
                   if( buffer_full == 1) begin // tem q ver como tu indica isso no wrapper e como isso vem pra ca
-                    EA <= 2'd5; //prod timer para temporariamente, buffer cheio
+                    EA <= 6'd5; //prod timer para temporariamente, buffer cheio
                   end
                 end
               end
               
-          2'd5:
+          6'd5:
               begin
                 if( not buffer_full ) begin  // tem q ver como tu indica isso no wrapper e como isso vem pra ca
-                  EA <= 2'd4; //prod timer
+                  EA <= 6'd4; //prod timer
                 end
                 else begin
                   if(stop_f_t_ed == 1)begin
-                    EA <= 2'd6; //esvaziamento e consumo do buffer
+                    EA <= 6'd6; //esvaziamento e consumo do buffer
                   end
                 end
               end
               
-          2'd6:
+          6'd6:
               begin
                 if(  buffer_empty and not data_2_valid)begin // ver como isso vem parar aqui
-                  EA <= 2'd1; //estado inicial
+                  EA <= 6'd1; //estado inicial
                 end
               end
           end
