@@ -64,7 +64,7 @@ module top
                 end
                 else begin
                   if( buffer_full == 1) begin // tem q ver como tu indica isso no wrapper e como isso vem pra ca
-                    EA <= 2'd3; //prod fibonacci para, buffer cheio
+                    EA <= 2'd3; //prod fibonacci para temporariamente, buffer cheio
                   end                  
                 end                
               end
@@ -79,7 +79,38 @@ module top
                     EA <= 2'd2; // prod fibonacci
                   end
                 end
-              end       
+              end  
+            
+           2'd4:
+              begin
+                if(stop_f_t_ed == 1)begin
+                  EA <= 2'd6; //esvaziamento e consumo do buffer
+                end
+                else begin
+                  if( buffer_full == 1) begin // tem q ver como tu indica isso no wrapper e como isso vem pra ca
+                    EA <= 2'd5; //prod timer para temporariamente, buffer cheio
+                  end
+                end
+              end
+              
+          2'd5:
+              begin
+                if( not buffer_full ) begin  // tem q ver como tu indica isso no wrapper e como isso vem pra ca
+                  EA <= 2'd4; //prod timer
+                end
+                else begin
+                  if(stop_f_t_ed == 1)begin
+                    EA <= 2'd6; //esvaziamento e consumo do buffer
+                  end
+                end
+              end
+              
+          2'd6:
+              begin
+                if(  buffer_empty and not data_2_valid)begin // ver como isso vem parar aqui
+                  EA <= 2'd1; //estado inicial
+                end
+              end
           end
       end    
    end
