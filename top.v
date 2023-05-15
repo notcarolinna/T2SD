@@ -138,6 +138,7 @@ module top
                   EA <= 6'd1; //estado inicial
                 end
               end
+              endcase
           end
       end    
    end
