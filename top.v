@@ -23,13 +23,17 @@ module top
     wire start_t_ed; 
     wire stop_f_t_ed;
     wire update_ed;
-    reg[5:0]EA; // 6 bits pq são 6 valores
+    reg [5:0]EA; // 6 bits pq são 6 valores
   
     //sinais q 'vem' do wrapper
-  
+    wire data_1_en;
+    wire buffer_empty;
+    wire buffer_full;
+    wire data_2_valid;
+    wire [15:0]data_1, data_2;  
   
     //sinais q 'vem' do dm
-    
+    // q q é o module wire do vini???
   
     //sinais q 'vem' do dcm
     wire clk_1;
