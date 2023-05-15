@@ -141,5 +141,16 @@ module top
           end
       end    
    end
+          
+   //comando para os led's
+   assign led[0] = (EA == 6'd0) ? 1'b1 : 
+          led[1] = (EA == 6'd1) ? 1'b1 :
+          led[2] = (EA == 6'd2) ? 1'b1 :
+          led[3] = (EA == 6'd3) ? 1'b1 :
+          led[4] = (EA == 6'd4) ? 1'b1 :
+          led[5] = (EA == 6'd5) ? 1'b1 :
+          1'b0;
+          
+   //'instanciar'/ 'colocar as devidas infos nos devidos lugares' do timer, fibonacci, dm e wrapper
  
 endmodule
