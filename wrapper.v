@@ -26,7 +26,11 @@ module wrapper
     end
     else begin
       if(data_1_en == 1)begin
+        if(buffer_wr == 3'd7)begin
+          buffer_full <= 1'b1;
+        end
         buffer_reg[buffer_wr] <= data_1;
+        buffer_wr <= buffer_wr + 1;
       end
     end
   end
