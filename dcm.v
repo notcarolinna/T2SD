@@ -6,37 +6,36 @@ module dcm
   input update, // indica que o clock lento deve ser atualizado para a frequência indicada pelo sinal prog_in
   input [2:0]prog_in,// indica qual frequência o clock lento deve operar 
   
-  output clk_1, // clock rápido gerado, que opera a 10 Hz
+  output reg clk_1, // clock rápido gerado, que opera a 10 Hz
   output clk_2, // clock lento gerado, que pode operar entre 10Hz e 78.125 mHz;
   output [2:0]prog_out // indica qual frequência o clock lento está gerando naquele momento
 );
 
-  reg clk_1;
   reg [31:0]cont_50K;
   reg [2:0]prog_reg; // sinal do prog_out
   reg[7:0]count_mode;
   reg[2:0]mode;
   
-  wire update_w; // realmente precisa desse wire? 
+  //wire update_w; // realmente precisa desse wire? 
   
-  //  clock de 10hz para o clk_1
+  //  clock de 10hz para o reg clk_1
   // faz a mesma coisa que o de cima, mas pra outro clock
   always @(posedge clk or posedge rst)
   begin
     if (rst == 1'b1) begin
-      clk_1   <= 1'b0; 
+      clk_1 <= 1'b0; 
       cont_50K <= 32'd0;
       mode <= 3'd0;
     end
     else begin
       if (cont_50K == HALF_MS_CONT-1) begin
-        clk_1   <= ~clk_1;
+        clk_1  <= ~clk_1;
         cont_50K <= 32'd0;
       end
       else begin
         cont_50K <= cont_50K + 1;
       end
-     if(update_w == 1)begin
+     if(update == 1)begin
       mode <= prog_in;
      end
     end
@@ -53,12 +52,12 @@ module dcm
         count_mode <= 8'd0;  
       end
       else begin
-        if(update_w == 1)begin // Pressionou o update e agora a magia vira potência de 
+        if(update == 1)begin // Pressionou o update e agora a magia vira potência de 
          count_mode <= count_mode + 8'd1;
         end
       end
     end
         
-assign  clk_2 = count_mode[mode];
+assign clk_2 = count_mode[mode];
 
 endmodule
