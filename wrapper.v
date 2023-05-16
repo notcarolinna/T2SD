@@ -25,14 +25,9 @@ module wrapper
       buffer_wr <= 3'b0;
     end
     else begin
-      if(data_1_en == 1)begin
-        if(buffer_wr == 3'd7)begin
-          buffer_full <= 1'b1;
-        end
-        else begin
+      if(data_1_en == 1 && buffer_full != 1'b1)begin // acrescentei o buffer aqui em vez de fazer separado q nem tava antes, fica visualmente mais agradável
         buffer_reg[buffer_wr] <= data_1;
-        buffer_wr <= buffer_wr + 3'd1; // pode ser só mais 1?
-        end
+        buffer_wr <= buffer_wr + 3'd1; 
       end
     end
   end
@@ -49,11 +44,15 @@ module wrapper
       data_2 <= buffer_reg[buffer_rd];
       buffer_rd <= buffer_rd + 3'd1;
       end
+      else begin
+      data_valid_2 <= 1'b0;  // caso o buffer esteja cheio
+      end
     end    
   end
   
   
-  
+assign buffer_empty = (buffer_wr == buffer_rd) ? 3'd1 : 3'd0;
+assign buffer_full = (buffer_rd - 1'b1 == buffer_wr) ? 3'd1 : 3'd0;
   
   
 endmodule
