@@ -15,6 +15,7 @@ module dcm
   reg [31:0]count_50K;
   reg [31:0]count_100mh;
   reg [2:0]prog_reg; // sinal do prog_out
+  reg[7:0]count_mode;
   
   wire update_w; // realmente precisa desse wire? 
   
@@ -42,27 +43,26 @@ module dcm
  edge_detector update_w (.clock(clk), .reset(rst), .din(update), rising(update_w));
  
  
- assign clk_2 = (update_w == 1 && prog_reg == 2'd0) ? 3'b000; // Modo 0
-                (update_w == 1 && prog_reg == 2'd1) ? 3'b001; // Modo 1
-                (update_w == 1 && prog_reg == 2'd2) ? 3'b010; // Modo 2
-                (update_w == 1 && prog_reg == 2'd3) ? 3'b011; // Modo 3
-                (update_w == 1 && prog_reg == 2'd4) ? 3'b100; // Modo 4
-                (update_w == 1 && prog_reg == 2'd5) ? 3'b101; // Modo 5
-                (update_w == 1 && prog_reg == 2'd6) ? 3'b110; // Modo 6
-                (update_w == 1 && prog_reg == 2'd7) ? 3'b111; // Modo 7
+ assign clk_2 = (update_w == 1 && prog_reg == 2'd0) ? count_mode[0]: // Modo 0
+                (update_w == 1 && prog_reg == 2'd1) ? count_mode[1]: // Modo 1
+                (update_w == 1 && prog_reg == 2'd2) ? count_mode[2]: // Modo 2
+                (update_w == 1 && prog_reg == 2'd3) ? count_mode[3]: // Modo 3
+                (update_w == 1 && prog_reg == 2'd4) ? count_mode[4]: // Modo 4
+                (update_w == 1 && prog_reg == 2'd5) ? count_mode[5]: // Modo 5
+                (update_w == 1 && prog_reg == 2'd6) ? count_mode[6]: // Modo 6
+                (update_w == 1 && prog_reg == 2'd7) ? count_mode[7]; // Modo 7
  
-  always @(posedge clk or posedge rst)
+ always @(posedge clk_1 or posedge rst)
     begin
       if(rst == 1)begin // apertou o reset
         prog_reg <= 2'd0; // vai pro mode 0, ou seja, 0.1s
+        count_mode <= 7'd0;  
       end
-
-
       else begin
         if(update_w == 1)begin // Pressionou o update e agora a magia vira potência de 2
-
-          // eu preciso disso aqui? acho q n pq ele ja to todo ali no assing?
+           count_mode <= 7'd0;
         end
+       count_mode <= count_mode + 1'b1;
       end
     end
   
