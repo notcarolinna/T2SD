@@ -43,7 +43,7 @@ module dcm
  edge_detector update_w (.clock(clk), .reset(rst), .din(update), rising(update_w));
  
  
- assign clk_2 = (update_w == 1 && prog_reg == 2'd0) ? count_mode[0]: // Modo 0
+/* assign clk_2 = (update_w == 1 && prog_reg == 2'd0) ? count_mode[0]: // Modo 0
                 (update_w == 1 && prog_reg == 2'd1) ? count_mode[1]: // Modo 1
                 (update_w == 1 && prog_reg == 2'd2) ? count_mode[2]: // Modo 2
                 (update_w == 1 && prog_reg == 2'd3) ? count_mode[3]: // Modo 3
@@ -51,6 +51,7 @@ module dcm
                 (update_w == 1 && prog_reg == 2'd5) ? count_mode[5]: // Modo 5
                 (update_w == 1 && prog_reg == 2'd6) ? count_mode[6]: // Modo 6
                 (update_w == 1 && prog_reg == 2'd7) ? count_mode[7]; // Modo 7
+                */
  
  always @(posedge clk_1 or posedge rst)
     begin
@@ -60,13 +61,12 @@ module dcm
       end
       else begin
         if(update_w == 1)begin // Pressionou o update e agora a magia vira potência de 2
-           count_mode <= 7'd0;
+         clk_2 <= count_mode;
+         count_mode <= count_mode + 1;
         end
-       count_mode <= count_mode + 1'b1;
       end
     end
-  
-  // preciso de um registrador prog pra poder zerar ele dps de passar pro prog_reg?          
+        
   
 
 endmodule
