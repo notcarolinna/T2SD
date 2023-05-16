@@ -8,31 +8,12 @@ module fibonacci
   output [15:0] f_out // valor atual da sequencia de fibonacci
 );
   
-  reg clk_10; 
-  reg [31:0] cont_50K;
   reg f_valid;
   reg [15:0] t1, t2, prox;
   
   wire f_en;
     
-  // Clock 10Hz
-  always @(posedge clk or posedge rst)
-  begin
-    if (reset == 1'b1) begin // se o reset for pressionado
-      clk_10   <= 1'b0; // inicializa o clk_10 em 0
-      count_50K <= 32'd0; // inicialiiza o count_50K em 0
-    end
-    else begin // se o reset não estiver atiivado
-      if (count_50K == HALF_MS_COUNT-1) begin
-        clk_10   <= ~clk_10; // inverte o clock
-        count_50K <= 32'd0; // zera o count_50K
-      end
-      else begin
-        count_50K <= count_50K + 1; // incrementa o count_50K em 1 a cada ciclo de clock
-      end
-    end
-  end
-  
+ 
    // Cálculo Fibonacci
   always @(posedge clk or posedge rst)
     begin
