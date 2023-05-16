@@ -35,6 +35,13 @@ module wrapper
     end
   end
   
+  //processo de leitura
+  always @(posedge clk_2 or posedge rst) begin
+    
+    
+    
+  end
+  
   
   
 endmodule
