@@ -12,10 +12,10 @@ module dcm
 );
 
   reg clk_1;
-  reg [31:0]count_50K;
-  reg [31:0]count_100mh;
+  reg [31:0]cont_50K;
   reg [2:0]prog_reg; // sinal do prog_out
   reg[7:0]count_mode;
+  reg[2:0]mode;
   
   wire update_w; // realmente precisa desse wire? 
   
@@ -26,6 +26,7 @@ module dcm
     if (rst == 1'b1) begin
       clk_1   <= 1'b0; 
       cont_50K <= 32'd0;
+      mode <= 3'd0;
     end
     else begin
       if (cont_50K == HALF_MS_CONT-1) begin
@@ -35,38 +36,29 @@ module dcm
       else begin
         cont_50K <= cont_50K + 1;
       end
+     if(update_w == 1)begin
+      mode <= prog_in;
+     end
     end
   end
   
  
  //instanciação do edge detector para o wire do update
  edge_detector update_w (.clock(clk), .reset(rst), .din(update), rising(update_w));
- 
- 
-/* assign clk_2 = (update_w == 1 && prog_reg == 2'd0) ? count_mode[0]: // Modo 0
-                (update_w == 1 && prog_reg == 2'd1) ? count_mode[1]: // Modo 1
-                (update_w == 1 && prog_reg == 2'd2) ? count_mode[2]: // Modo 2
-                (update_w == 1 && prog_reg == 2'd3) ? count_mode[3]: // Modo 3
-                (update_w == 1 && prog_reg == 2'd4) ? count_mode[4]: // Modo 4
-                (update_w == 1 && prog_reg == 2'd5) ? count_mode[5]: // Modo 5
-                (update_w == 1 && prog_reg == 2'd6) ? count_mode[6]: // Modo 6
-                (update_w == 1 && prog_reg == 2'd7) ? count_mode[7]; // Modo 7
-                */
- 
+  
  always @(posedge clk_1 or posedge rst)
     begin
       if(rst == 1)begin // apertou o reset
         prog_reg <= 2'd0; // vai pro mode 0, ou seja, 0.1s
-        count_mode <= 7'd0;  
+        count_mode <= 8'd0;  
       end
       else begin
-        if(update_w == 1)begin // Pressionou o update e agora a magia vira potência de 2
-         clk_2 <= count_mode;
-         count_mode <= count_mode + 1;
+        if(update_w == 1)begin // Pressionou o update e agora a magia vira potência de 
+         count_mode <= count_mode + 8'd1;
         end
       end
     end
         
-  
+assign  clk_2 = count_mode[mode];
 
 endmodule
