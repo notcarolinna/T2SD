@@ -29,18 +29,30 @@ module wrapper
         if(buffer_wr == 3'd7)begin
           buffer_full <= 1'b1;
         end
+        else begin
         buffer_reg[buffer_wr] <= data_1;
-        buffer_wr <= buffer_wr + 1;
+        buffer_wr <= buffer_wr + 3'd1; // pode ser só mais 1?
+        end
       end
     end
   end
   
   //processo de leitura
   always @(posedge clk_2 or posedge rst) begin
-    
-    
-    
+    if(rst == 1)begin
+      buffer_rd <= 3'b0;
+      data_2 <= 16'd0;
+    end
+    else begin
+      if(buffer_empty != 1'b1)begin
+      data_valid_2 <= 1'b1;
+      data_2 <= buffer_reg[buffer_rd];
+      buffer_rd <= buffer_rd + 3'd1;
+      end
+    end    
   end
+  
+  
   
   
   
