@@ -8,8 +8,8 @@ module wrapper
   
   output buffer_empty,//flag de controle que indica que o buffer interno do módulo está vazio
   output buffer_full, //flag de controle que indica que o buffer interno do módulo está cheio
-  output data_2_valid,//indica que o valor a ser consumido é válido
-  output [15:0]data_2//valor de 16 bits que o sistema está consumindo naquele momento, o qual foi previamente gerado pelo módulo Fibonacci ou pelo módulo Timer.
+  output reg data_valid_2,//indica que o valor a ser consumido é válido
+  output reg [15:0]data_2//valor de 16 bits que o sistema está consumindo naquele momento, o qual foi previamente gerado pelo módulo Fibonacci ou pelo módulo Timer.
 );
 
   // se a frequencia de leiura for mais q a de escrita o buffer vai enchar e qnd isso acontecer o buffer tem q mandar um sinal pro timer parar de produzir as infos e isso vai criar uma saída incorreta
