@@ -19,24 +19,6 @@ module dcm
   reg [2:0]prog_reg; // sinal do prog_out
   
   wire update_w; // realmente precisa desse wire? 
-
-  //clock de 100 mHz
-  always @(posedge clk or posedge rst)
-  begin
-    if (rst == 1'b1) begin // ativou o reset
-      clk_100   <= 1'b0; // clock definido como 0
-      count_100mh <= 32'd0; // e o contador também é zerado
-    end
-    else begin // silencio que o contador ta contando
-      if (count_100mh == HALF_COUNT-1) begin  // quando o valor do contador chegar na metade
-        clk_100   <= ~clk_100; // o clock muda de 0 para 1 ou de 1 pra 0
-        count_100mh <= 32'd0; // contador resetado novamente
-      end
-      else begin
-        count_100mh <= count_100mh + 1; // o valor de count é incrementado em 1 a cada ciclo de clock :D
-      end
-    end
-  end
   
   //  clock de 10hz para o clk_1
   // faz a mesma coisa que o de cima, mas pra outro clock
@@ -87,6 +69,6 @@ module dcm
     end
   
   // preciso de um registrador prog pra poder zerar ele dps de passar pro prog_reg?          
-  // falta conferir o 2.3 (terminar o edge detector e colocar os valores dos segundos o 2.4 2.5 o 3  e testar as waves de cada um)
+  
 
 endmodule
