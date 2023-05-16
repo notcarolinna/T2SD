@@ -15,7 +15,8 @@ module wrapper
   // se a frequencia de leiura for mais q a de escrita o buffer vai enchar e qnd isso acontecer o buffer tem q mandar um sinal pro timer parar de produzir as infos e isso vai criar uma saída incorreta
   //sinais
   reg[15:0] buffer_reg[0:7];
-  
+  reg[2:0] buffer_wr; //clk1
+  reg[2:0] buffer_rd; //clk2
   
   
   
