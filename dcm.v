@@ -43,8 +43,8 @@ module dcm
   end
   
  
- //instanciação do edge detector para o wire do update
- edge_detector update_w (.clock(clk), .reset(rst), .din(update), rising(update_w));
+ // instanciação do edge detector para o wire do update
+ // edge_detector update_w (.clock(clk), .reset(rst), .din(update), .rising(update_w)); //isso não vem do top?
   
  always @(posedge clk_1 or posedge rst)
     begin
