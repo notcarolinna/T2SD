@@ -19,5 +19,18 @@ module wrapper
   reg[2:0] buffer_rd; //clk2
   
   
+  //processo de escrita
+  always @(posedge clk_1 or posedge rst)begin
+    if(rst == 1)begin
+      buffer_wr <= 3'b0;
+    end
+    else begin
+      if(data_1_en == 1)begin
+        buffer_reg[buffer_wr] <= data_1;
+      end
+    end
+  end
+  
+  
   
 endmodule
