@@ -1,21 +1,21 @@
 module top 
 #(parameter HALF_MS_COUNT = 500)
 (
-  input rst, // reset do módulo que é ativo alto (‘1’)
-  input clk, //clock de referência deste módulo síncrono que opera a 100 MHz
-  input start_f,//o botão que indica o início ou continuação da produção de dados pelo módulo Fibonacc
-  input start_t, // botão que indica o início ou continuação da produção de dados pelo módulo Timer
-  input stop_f_t,//botão que indica a parada de produção de dados dos módulos Fibonacci e Timer
-  input update, //botão que indica que o clock lento deve ser atualizado para a frequência indicada pelo valor prog
-  input [2:0]prog, //indica qual frequência o clock lento deve operar
+  input rst, // reset do mÃ³dulo que eÌ ativo alto (â1â)
+  input clk, //clock de referÃªncia deste mÃ³dulo sÃ­ncrono que opera a 100 MHz
+  input start_f,//o botÃ£o que indica o inÃ­cio ou continuaÃ§Ã£o da produÃ§Ã£o de dados pelo mÃ³dulo Fibonacc
+  input start_t, // botÃ£o que indica o inÃ­cio ou continuaÃ§Ã£o da produÃ§Ã£o de dados pelo mÃ³dulo Timer
+  input stop_f_t,//botÃ£o que indica a parada de produÃ§Ã£o de dados dos mÃ³dulos Fibonacci e Timer
+  input update, //botÃ£o que indica que o clock lento deve ser atualizado para a frequÃªncia indicada pelo valor prog
+  input [2:0]prog, //indica qual frequÃªncia o clock lento deve operar
   
-  output [5:0]led,//sinal visual que indica em que estado da máquina de estado o sistema está operando
-  output [7:0]an, //controla a ativação de cada um dos displays disponíveis no FPGA
-  output [7:0]dec_ddp //valor decodificado do dígito de 8 bits a ser mostrado no instante atual pelo display
+  output [5:0]led,//sinal visual que indica em que estado da mÃ¡quina de estado o sistema estÃ¡ operando
+  output [7:0]an, //controla a ativaÃ§Ã£o de cada um dos displays disponÃ­veis no FPGA
+  output [7:0]dec_ddp //valor decodificado do dÃ­gito de 8 bits a ser mostrado no instante atual pelo display
 );
   
   
-  // FAZ A LIGAÇÃO DE TODOS OS MÓDULOS COM O FPGA
+  // FAZ A LIGAÃÃO DE TODOS OS MÃDULOS COM O FPGA
   
   // SINAIS
     //sinais do top mesmo
@@ -23,7 +23,7 @@ module top
     wire start_t_ed; 
     wire stop_f_t_ed;
     wire update_ed;
-    reg [5:0]EA; // 6 bits pq são 6 valores
+    reg [5:0]EA; // 6 bits pq sÃ£o 6 valores
   
     //sinais q 'vem' do wrapper
     wire data_1_en;
@@ -52,17 +52,17 @@ module top
        
   
   // precisa filtrar os sinais do start, stop, update
-  edge_detector start_f (.clock(clk), .reset(rst), .din(start_f), .rising(start_f_ed));
-  edge_detector start_t (.clock(clk), .reset(rst), .din(start_t), .rising(start_t_ed));
-  edge_detector start_f_t (.clock(clk), .reset(rst), .din(start_f_t), .rising(start_f_t_ed));
-  edge_detector update (.clock(clk), .reset(rst), .din(update), .rising(update_ed));
+  edge_detector start_fa (.clock(clk), .reset(rst), .din(start_f), .rising(start_f_ed));
+  edge_detector start_ta (.clock(clk), .reset(rst), .din(start_t), .rising(start_t_ed));
+  edge_detector astart_f_t (.clock(clk), .reset(rst), .din(start_f_t), .rising(start_f_t_ed));
+  edge_detector aupdate (.clock(clk), .reset(rst), .din(update), .rising(update_ed));
   
-  // máquina de estados:
+  // mÃ¡quina de estados:
   // 1: S_IDLE, estado inicial em repouso
-  // 2: S_COMM_F, estado de produção e consumo dos dados do módulo Fibonacci
-  // 3: S_WAIT_F, estado onde a produção de dados do módulo Fibonacci é parada temporariamente pois o buffer está cheio
-  // 4: S_COMM_T, estado de produção e consumo dos dados do módulo Timer
-  // 5: S_WAIT_T, estado onde a produção de dados do módulo Timer é parada temporariamente pois o buffer está cheio
+  // 2: S_COMM_F, estado de produÃ§Ã£o e consumo dos dados do mÃ³dulo Fibonacci
+  // 3: S_WAIT_F, estado onde a produÃ§Ã£o de dados do mÃ³dulo Fibonacci Ã© parada temporariamente pois o buffer estÃ¡ cheio
+  // 4: S_COMM_T, estado de produÃ§Ã£o e consumo dos dados do mÃ³dulo Timer
+  // 5: S_WAIT_T, estado onde a produÃ§Ã£o de dados do mÃ³dulo Timer Ã© parada temporariamente pois o buffer estÃ¡ cheio
   // 6: S_BUF_EMPTY, estado de consumo e esvaziamento do buffer
   
   
@@ -78,14 +78,15 @@ module top
               if(start_f_ed == 1)begin
                 EA <= 6'd2; // prod fibonacci
               end
-              else begin
+		end
+          else begin
                 if(start_t_ed == 1)begin
                   EA <= 6'd4; //prod timer
                 end
               end
-         
-         2'62:
-              begin
+         end
+         6'd2:
+	      begin
                 if(stop_f_t_ed == 1)begin
                   EA <= 6'd6; // esvaziamento e consumo do buffer
                 end
@@ -93,8 +94,7 @@ module top
                   if( buffer_full == 1) begin // tem q ver como tu indica isso no wrapper e como isso vem pra ca
                     EA <= 6'd3; //prod fibonacci para temporariamente, buffer cheio
                   end                  
-                end                
-              end
+                end               
            
           6'd3:
               begin
@@ -106,9 +106,9 @@ module top
                     EA <= 6'd2; // prod fibonacci
                   end
                 end
-              end  
+        
             
-           2'64:
+           6'd4:
               begin
                 if(stop_f_t_ed == 1)begin
                   EA <= 6'd6; //esvaziamento e consumo do buffer
@@ -158,14 +158,14 @@ module top
    //fibonacci
    assign f_en = (EA == 6'd1 && buffer_full != 1'b1) ? 1'b1 : 1'b0;  // pra saber qnd produzir o dado do fibonacci     
    //dm
-   assign modulo_w = (EA == 6'd1 || EA == 6'd2) ? 2'd1 :  // HELPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+   assign modulo_w = (EA == 6'd1 || EA == 6'd2) ? 2'd1 :  
                      (EA == 6'd3 || EA == 6'd4) ? 2'd2 : 
                      2'd0;
    //wrapper
    assign data_1 = (EA == 6'd1) ? f_out : 
                    (EA == 6'd3) ? t_out : 
                    16'd0;
-   assign data_1_en = f_en || t_en;  /// ISSo pode????
+   assign data_1_en = f_en || t_en;  
               
           
    //'chamar' os arquivos     
