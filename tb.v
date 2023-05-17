@@ -11,15 +11,15 @@ module tb;
 
   initial
   begin
-    clock = 1'b1;
-    forever #(PERIOD_100MHZ/2) clock = ~clock;
+    clk = 1'b1;
+    forever #(PERIOD_100MHZ/2) clk = ~clk;
   end
 
   initial
   begin
-    reset = 1'b1;
+    rst = 1'b1;
     #30;
-    reset = 1'b0;
+    rst = 1'b0;
     start_f  = 1'b0;
     start_t  = 1'b0;
     stop_f_t = 1'b0;
