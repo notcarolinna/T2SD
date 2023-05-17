@@ -1,5 +1,5 @@
 module dcm 
- #(parameter HALF_MS_CONT = 2)
+ #(parameter HALF_MS_CONT = 500000)
 (
   input rst, // reset do módulo que é ativo alto (‘1’);
   input clk, // clock de referência deste módulo síncrono que opera a 100 MHz
