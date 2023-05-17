@@ -54,88 +54,84 @@ module top
   // precisa filtrar os sinais do start, stop, update
   edge_detector start_fa (.clock(clk), .reset(rst), .din(start_f), .rising(start_f_ed));
   edge_detector start_ta (.clock(clk), .reset(rst), .din(start_t), .rising(start_t_ed));
-  edge_detector astart_f_t (.clock(clk), .reset(rst), .din(start_f_t), .rising(start_f_t_ed));
+  edge_detector astart_f_t (.clock(clk), .reset(rst), .din(stop_f_t), .rising(stop_f_t_ed));
   edge_detector aupdate (.clock(clk), .reset(rst), .din(update), .rising(update_ed));
   
   // mÃ¡quina de estados:
-  // 1: S_IDLE, estado inicial em repouso
-  // 2: S_COMM_F, estado de produÃ§Ã£o e consumo dos dados do mÃ³dulo Fibonacci
-  // 3: S_WAIT_F, estado onde a produÃ§Ã£o de dados do mÃ³dulo Fibonacci Ã© parada temporariamente pois o buffer estÃ¡ cheio
-  // 4: S_COMM_T, estado de produÃ§Ã£o e consumo dos dados do mÃ³dulo Timer
-  // 5: S_WAIT_T, estado onde a produÃ§Ã£o de dados do mÃ³dulo Timer Ã© parada temporariamente pois o buffer estÃ¡ cheio
-  // 6: S_BUF_EMPTY, estado de consumo e esvaziamento do buffer
+  // 0: S_IDLE, estado inicial em repouso
+  // 1: S_COMM_F, estado de produÃ§Ã£o e consumo dos dados do mÃ³dulo Fibonacci
+  // 2: S_WAIT_F, estado onde a produÃ§Ã£o de dados do mÃ³dulo Fibonacci Ã© parada temporariamente pois o buffer estÃ¡ cheio
+  // 3: S_COMM_T, estado de produÃ§Ã£o e consumo dos dados do mÃ³dulo Timer
+  // 4: S_WAIT_T, estado onde a produÃ§Ã£o de dados do mÃ³dulo Timer Ã© parada temporariamente pois o buffer estÃ¡ cheio
+  // 5: S_BUF_EMPTY, estado de consumo e esvaziamento do buffer
   
   
 always @(posedge clk or posedge rst)
     begin
-      if(rst == 1)begin
-        EA <= 6'd1; // estado inicial
+      if(rst == 1'b1)
+      begin
+        EA <= 6'd0;
       end
-      else begin
-        case (EA)
-          6'd1: // estado inicial
+      else
+      case(EA)
+            6'd0:
             begin
               if(start_f_ed == 1)begin
-                EA <= 6'd2; // prod fibonacci
+                EA <= 6'd1; // prod fibonacci
               end
                 if(start_t_ed == 1)begin
-                  EA <= 6'd4; //prod timer
+                  EA <= 6'd3; //prod timer
                 end
               end
-         6'd2:
+         6'd1:
 	      begin
-                if(stop_f_t_ed == 1)begin
-                  EA <= 6'd6; // esvaziamento e consumo do buffer
+                if(stop_f_t_ed == 1'b1)begin
+                  EA <= 6'd5; // esvaziamento e consumo do buffer
                 end
                   if( buffer_full == 1) begin // tem q ver como tu indica isso no wrapper e como isso vem pra ca
-                    EA <= 6'd3; //prod fibonacci para temporariamente, buffer cheio
+                    EA <= 6'd2; //prod fibonacci para temporariamente, buffer cheio
                   end                  
                 end               
            
-          6'd3:
+          6'd2:
               begin
                 if( buffer_full != 1'b1 ) begin  // em vez daquele not, cooloquei != 1'b1
-                  EA <= 6'd2; //prod fibonacci
+                  EA <= 6'd1; //prod fibonacci
                 end 
                
                   if( stop_f_t_ed == 1)begin
-                    EA <= 6'd2; // prod fibonacci
+                    EA <= 6'd5;
                   end
                 end
-        
-            
-           6'd4:
+          6'd3:
               begin
-                if(stop_f_t_ed == 1)begin
-                  EA <= 6'd6; //esvaziamento e consumo do buffer
+                if( buffer_full == 1'b1 ) begin  
+                  EA <= 6'd4; //prod timer
                 end
-             
-                  if( buffer_full == 1) begin // tem q ver como tu indica isso no wrapper e como isso vem pra ca
-                    EA <= 6'd5; //prod timer para temporariamente, buffer cheio
+               
+                  if(stop_f_t_ed == 1)begin
+                    EA <= 6'd5; //esvaziamento e consumo do buffer
+                  end
+                end
+        6'd4:
+              begin
+                if( buffer_full != 1'b1 ) begin  
+                  EA <= 6'd3; //prod timer
+                end
+               
+                  if(stop_f_t_ed == 1)begin
+                    EA <= 6'd5; //esvaziamento e consumo do buffer
                   end
                 end
               
           6'd5:
               begin
-                if( buffer_full != 1'b1 ) begin  
-                  EA <= 6'd4; //prod timer
-                end
-               
-                  if(stop_f_t_ed == 1)begin
-                    EA <= 6'd6; //esvaziamento e consumo do buffer
-                  end
-                end
-        
-              
-          6'd6:
-              begin
-                if(buffer_empty && data_valid_2 != 1'b1)begin 
-                  EA <= 6'd1; //estado inicial
+                if(buffer_empty == 1'b1 && data_valid_2 != 1'b1)begin 
+                  EA <= 6'd0; //estado inicial
                 end
               end
               endcase
           end
-      end
           
    //comando para os led's, eles indicam qual o estado em q a maquina de estados se encontra
   assign led[0] = (EA == 6'd0) ? 1'b1 : 1'b0;
@@ -164,7 +160,7 @@ always @(posedge clk or posedge rst)
    //'chamar' os arquivos     
   fibonacci fibonacci_arq(.rst(rst), .clk(clk_1), .f_en(f_en), .f_valid(f_valid), .f_out(f_out));
   timer timer_arq(.rst(rst), .clk(clk_1), .t_en(t_en), .t_valid(t_valid), .t_out(t_out));
-  dcm dcm_arq(.rst(rst), .clk(clock), .clk_1(clk_1), .clk_2(clk_2), .update(update_ed), .prog_in(prog), .prog_out(prog_out)); /// tem q ver o nosso dcm ainda pq acho q os sinais n batem todos com esses
+  dcm dcm_arq(.rst(rst), .clk(clk), .clk_1(clk_1), .clk_2(clk_2), .update(update_ed), .prog_in(prog), .prog_out(prog_out)); /// tem q ver o nosso dcm ainda pq acho q os sinais n batem todos com esses
   dm dm_arq(.rst(rst), .clk(clk), .prog(prog_out), .data_2(data_2), .dec_ddp(dec_ddp), .an(an), .modulo(modulo_w));
   wrapper wrapper_arq(.rst(rst), .clk_1(clk_1), .clk_2(clk_2), .data_1_en(data_1_en), .data_1(data_1), .buffer_empty(buffer_empty), .buffer_full(buffer_full), .data_valid_2(data_valid_2), .data_2(data_2));
  
