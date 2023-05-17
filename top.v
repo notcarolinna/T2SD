@@ -146,11 +146,11 @@ always @(posedge clk or posedge rst)
    assign t_en = (EA == 6'd3 && buffer_full != 1'b1) ? 1'b1 : 1'b0; // pra saber qnd produzir o dado do timer
    //fibonacci
    assign f_en = (EA == 6'd1 && buffer_full != 1'b1) ? 1'b1 : 1'b0;  // pra saber qnd produzir o dado do fibonacci     
-   //dm
+   //dm isso é pra luz aparecer certinho
    assign modulo_w = (EA == 6'd1 || EA == 6'd2) ? 2'd1 :  
                      (EA == 6'd3 || EA == 6'd4) ? 2'd2 : 
                      2'd0;
-   //wrapper
+   //wrapper pra saber qnd pegar a data do timer e do fibonacci
    assign data_1 = (EA == 6'd1) ? f_out : 
                    (EA == 6'd3) ? t_out : 
                    16'd0;
