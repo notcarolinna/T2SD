@@ -66,7 +66,7 @@ module top
   // 6: S_BUF_EMPTY, estado de consumo e esvaziamento do buffer
   
   
-  always @(posedge clk or posedge rst)
+always @(posedge clk or posedge rst)
     begin
       if(rst == 1)begin
         EA <= 6'd1; // estado inicial
@@ -78,19 +78,15 @@ module top
               if(start_f_ed == 1)begin
                 EA <= 6'd2; // prod fibonacci
               end
-		end
-          else begin
                 if(start_t_ed == 1)begin
                   EA <= 6'd4; //prod timer
                 end
               end
-         end
          6'd2:
 	      begin
                 if(stop_f_t_ed == 1)begin
                   EA <= 6'd6; // esvaziamento e consumo do buffer
                 end
-                else begin
                   if( buffer_full == 1) begin // tem q ver como tu indica isso no wrapper e como isso vem pra ca
                     EA <= 6'd3; //prod fibonacci para temporariamente, buffer cheio
                   end                  
@@ -98,10 +94,10 @@ module top
            
           6'd3:
               begin
-                if( not buffer_full ) begin  // tem q ver como tu indica isso no wrapper e como isso vem pra ca
+                if( buffer_full != 1'b1 ) begin  // em vez daquele not, cooloquei != 1'b1
                   EA <= 6'd2; //prod fibonacci
                 end 
-                else begin
+               
                   if( stop_f_t_ed == 1)begin
                     EA <= 6'd2; // prod fibonacci
                   end
@@ -113,45 +109,42 @@ module top
                 if(stop_f_t_ed == 1)begin
                   EA <= 6'd6; //esvaziamento e consumo do buffer
                 end
-                else begin
+             
                   if( buffer_full == 1) begin // tem q ver como tu indica isso no wrapper e como isso vem pra ca
                     EA <= 6'd5; //prod timer para temporariamente, buffer cheio
                   end
                 end
-              end
               
           6'd5:
               begin
-                if( not buffer_full ) begin  // tem q ver como tu indica isso no wrapper e como isso vem pra ca
+                if( buffer_full != 1'b1 ) begin  
                   EA <= 6'd4; //prod timer
                 end
-                else begin
+               
                   if(stop_f_t_ed == 1)begin
                     EA <= 6'd6; //esvaziamento e consumo do buffer
                   end
                 end
-              end
+        
               
           6'd6:
               begin
-                if(  buffer_empty and not data_valid_2)begin // ver como isso vem parar aqui
+                if(buffer_empty && data_valid_2 != 1'b1)begin 
                   EA <= 6'd1; //estado inicial
                 end
               end
               endcase
           end
-      end    
-   end
+      end
           
    //comando para os led's, eles indicam qual o estado em q a maquina de estados se encontra
-   assign led[0] = (EA == 6'd0) ? 1'b1 : 
-          led[1] = (EA == 6'd1) ? 1'b1 :
-          led[2] = (EA == 6'd2) ? 1'b1 :
-          led[3] = (EA == 6'd3) ? 1'b1 :
-          led[4] = (EA == 6'd4) ? 1'b1 :
-          led[5] = (EA == 6'd5) ? 1'b1 :
-          1'b0;
-          
+  assign led[0] = (EA == 6'd0) ? 1'b1 : 1'b0;
+  assign led[1] = (EA == 6'd1) ? 1'b1 : 1'b0;
+  assign led[2] = (EA == 6'd2) ? 1'b1 : 1'b0;
+  assign led[3] = (EA == 6'd3) ? 1'b1 : 1'b0;
+  assign led[4] = (EA == 6'd4) ? 1'b1 : 1'b0;
+  assign led[5] = (EA == 6'd5) ? 1'b1 : 1'b0;
+
    //'instanciar'/ 'colocar as devidas infos nos devidos lugares' do timer, fibonacci, dm e wrapper
    //timer
    assign t_en = (EA == 6'd3 && buffer_full != 1'b1) ? 1'b1 : 1'b0; // pra saber qnd produzir o dado do timer
@@ -175,7 +168,5 @@ module top
   dm dm_arq(.rst(rst), .clk(clk), .prog(prog_out), .data_2(data_2), .dec_ddp(dec_ddp), .an(an), .modulo(modulo_w));
   wrapper wrapper_arq(.rst(rst), .clk_1(clk_1), .clk_2(clk_2), .data_1_en(data_1_en), .data_1(data_1), .buffer_empty(buffer_empty), .buffer_full(buffer_full), .data_valid_2(data_valid_2), .data_2(data_2));
  
-   
-   
  
 endmodule
