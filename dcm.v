@@ -1,5 +1,5 @@
 module dcm 
- #(parameter HALF_MS_CONT = 50000000)
+ #(parameter HALF_MS_CONT = 2)
 (
   input rst, // reset do módulo que é ativo alto (‘1’);
   input clk, // clock de referência deste módulo síncrono que opera a 100 MHz
@@ -41,9 +41,6 @@ module dcm
     end
   end
   
- 
- // instanciação do edge detector para o wire do update
- // edge_detector update_w (.clock(clk), .reset(rst), .din(update), .rising(update_w)); //isso não vem do top?
   
  always @(posedge clk_1 or posedge rst)
     begin
@@ -52,12 +49,11 @@ module dcm
         count_mode <= 8'd0;  
       end
       else begin
-        if(update == 1)begin // Pressionou o update e agora a magia vira potência de 
          count_mode <= count_mode + 8'd1;
-        end
       end
     end
         
+assign prog_out = mode;
 assign clk_2 = count_mode[mode];
 
 endmodule
