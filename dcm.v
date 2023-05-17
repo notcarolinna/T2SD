@@ -1,4 +1,4 @@
-module dcm 
+module dcm // controla os dois clocks o clk_1 e o clk_2
  #(parameter HALF_MS_CONT = 500000)
 (
   input rst, // reset do módulo que é ativo alto (‘1’);
