@@ -37,6 +37,7 @@ module wrapper
     if(rst == 1)begin
       buffer_rd <= 3'b0;
       data_2 <= 16'd0;
+      data_valid_2 <= 1'b0;
     end
     else begin
       if(buffer_empty != 1'b1)begin
