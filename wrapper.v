@@ -1,4 +1,4 @@
-module wrapper 
+module wrapper // gerencia a escrita e leitura dos dados no buffer
 (
   input rst, //reset do módulo que é ativo alto (‘1’)
   input clk_1, //é o clock rápido, que opera a 10 Hz
