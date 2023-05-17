@@ -1,4 +1,4 @@
-module dm 
+module dm // controla oq aparece nos displays
  #(parameter HALF_MS_CONT = 50)
 (
   input rst,//reset do módulo que é ativo alto (‘1’)
