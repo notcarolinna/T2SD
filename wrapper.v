@@ -24,10 +24,11 @@ module wrapper // gerencia a escrita e leitura dos dados no buffer
     if(rst == 1)begin
       buffer_wr <= 3'b0;
     end
+    
     else begin
-      if(data_1_en == 1 && buffer_full != 1'b1)begin // acrescentei o buffer aqui em vez de fazer separado q nem tava antes, fica visualmente mais agradável
-        buffer_reg[buffer_wr] <= data_1;
-        buffer_wr <= buffer_wr + 3'd1; 
+      if(data_1_en == 1 && buffer_full != 1'b1)begin  // se o data_1_en estiver em 1 e o buffer não estivier cheio, há um dado válido para ser escrito no buffer
+        buffer_reg[buffer_wr] <= data_1; // o valor de data_1 é armazenado no buffer_reg na posição indicada pelo buffer_wr
+        buffer_wr <= buffer_wr + 3'd1; // icrementa o buffer_wr em 1, selecionando a próxima posição de escrita no buffer
       end
     end
   end
@@ -39,19 +40,21 @@ module wrapper // gerencia a escrita e leitura dos dados no buffer
       data_2 <= 16'd0;
       data_valid_2 <= 1'b0;
     end
+    
     else begin
-      if(buffer_empty != 1'b1)begin
-      data_valid_2 <= 1'b1;
-      data_2 <= buffer_reg[buffer_rd];
-      buffer_rd <= buffer_rd + 3'd1;
+      if(buffer_empty != 1'b1)begin // se o buffer não estiver cheio
+      data_valid_2 <= 1'b1; // atribui 1 ao data_valid_2 para indicar que o valor a ser cosumido é válido
+      data_2 <= buffer_reg[buffer_rd]; // atribui o valor armazenado na posiição do buffer à data_2
+      buffer_rd <= buffer_rd + 3'd1; // icremeta o buffer_rd em 1
       end
+      
       else begin
-      data_valid_2 <= 1'b0;  // caso o buffer esteja cheio
+      data_valid_2 <= 1'b0;  // caso o buffer esteja cheio, atribui 0
       end
     end    
   end
   
-  
+  // defiição dos valores dos sinais
 assign buffer_empty = (buffer_wr == buffer_rd) ? 3'd1 : 3'd0;
 assign buffer_full = (buffer_rd - 1'b1 == buffer_wr) ? 3'd1 : 3'd0;
   
