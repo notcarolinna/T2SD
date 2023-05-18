@@ -1,5 +1,5 @@
 module dcm // controla os dois clocks o clk_1 e o clk_2
- #(parameter HALF_MS_CONT = 500000)
+ #(parameter HALF_MS_CONT = 5000000)
 (
   input rst, // reset do módulo que é ativo alto (‘1’);
   input clk, // clock de referência deste módulo síncrono que opera a 100 MHz
