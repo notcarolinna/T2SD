@@ -8,21 +8,25 @@ module fibonacci
   output [15:0] f_out // valor atual da sequencia de fibonacci
 );
   
+  // t1 = posição anterior
+  // t2 = posição atual
   reg [15:0] t1, t2;
    
  
    // Cálculo Fibonacci
   always @(posedge clk or posedge rst)
     begin
-      if(rst == 1) 
-      begin // se o reset for ativado
-        t1 <= 16'd0; // t1 = posição anterior
-        t2 <= 16'd1; // t2 = posição atual
-        f_valid <= 1'b0;
+      
+      if(rst == 1) // se o reset estiver ativo, o módulo deverá ser reinicializado
+      begin 
+        t1 <= 16'd0; // inicializa o t1 em 0, pois é a primeira posição do fibonacci
+        t2 <= 16'd1; // inicializa o t2 em 1, pois é a segunda posição do vibonacci
+        f_valid <= 1'b0; // f_valid é definido como 0, indicando que o valor da saída é inválido
       end
+      
       else 
-      begin // senão
-        if(f_en == 1) begin // se o enable estiver ativo
+      begin // reset está inativo, verifica:
+        if(f_en == 1) begin // se o enable estiver ativo, deverá gerar o próximo valor do fiboancci
           f_valid <= 1'b1;  // o f_valid define que a saída é válida
           t1 <= t2; // o anterior recebe o atual
           t2 <= t2 + t1; // o atual recebe ele mais o anterior
@@ -33,6 +37,6 @@ module fibonacci
       end
     end
 
-assign f_out = t1;
+assign f_out = t1; // atribui o f_out ao t1, representado o valor atual do fibonacci
 
 endmodule
