@@ -1,5 +1,4 @@
 module top 
-#(parameter HALF_MS_COUNT = 500)
 (
   input rst, // reset do módulo que é ativo alto (‘1’)
   input clk, //clock de referência deste módulo síncrono que opera a 100 MHz
